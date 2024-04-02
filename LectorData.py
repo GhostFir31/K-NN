@@ -27,7 +27,6 @@ def contar_cantidad_por_categoria(lista):
         else:
             categorias[categoria] += 1
     
-
     categorias_ordenadas = {}
     for categoria_num in range(5):  
         if str(categoria_num) in categorias:
@@ -38,9 +37,7 @@ def contar_cantidad_por_categoria(lista):
 archivo_csv = "Datos_sujeto1 - Datos_sujeto1.csv"
 datos = leer_csv(archivo_csv)
 
-
 shuffle(datos)
-
 
 porcentaje_entrenamiento = int(input("Porcentaje de datos para entrenamiento (0-100): "))
 porcentaje_busqueda = 100 - porcentaje_entrenamiento
