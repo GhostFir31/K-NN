@@ -51,12 +51,12 @@ for fila in datosBusqueda:
 categoriasEntrenamiento = cantidadCategoria(datosEntrenamiento)
 categoriasBusqueda = cantidadCategoria(datosBusqueda)
 
-print("Cantidad por categoría en datos para entrenamiento:")
+print("Cantidad por categoría en datos para Entrenamiento:")
 print("Datos para entrenamiento: ", len(datosEntrenamiento))
 for categoria, cantidad in categoriasEntrenamiento.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
 
-print("Cantidad por categoría en datos para búsqueda:")
+print("Cantidad por categoría en datos para Prueba:")
 print("Datos para búsqueda: ", len(datosBusqueda))
 for categoria, cantidad in categoriasBusqueda.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
