@@ -9,59 +9,54 @@ def leer_csv(archivo_csv):
             datos.append(fila)
     return datos
 
-def dividir_datos(datos, porcentaje_entrenamiento):
-    total_datos = len(datos)
-    cantidad_entrenamiento = int(total_datos * porcentaje_entrenamiento / 100)
-    
-    datos_entrenamiento = datos[:cantidad_entrenamiento]
-    datos_busqueda = datos[cantidad_entrenamiento:]
-    
-    return datos_entrenamiento, datos_busqueda
+def leerDatosBusqueda():
+    archivo_csv = "datosBusqueda.csv"
+    datos = leer_csv(archivo_csv)
+    shuffle(datos)
+    return datos
 
-def contar_cantidad_por_categoria(lista):
+def leerDatosEntrenamiento():
+    archivo_csv = "datosEntrenamiento.csv"
+    datos = leer_csv(archivo_csv)
+    shuffle(datos)
+    return datos 
+
+def cantidadCategoria(datos):
     categorias = {}
-    for fila in lista:
+    for fila in datos:
         categoria = fila[-1]  
         if categoria not in categorias:
             categorias[categoria] = 1
         else:
             categorias[categoria] += 1
     
-    categorias_ordenadas = {}
-    for categoria_num in range(5):  
-        if str(categoria_num) in categorias:
-            categorias_ordenadas[str(categoria_num)] = categorias[str(categoria_num)]
+    categoriasOrdenadas = {}
+    for categoriaNum in range(5):  
+        if str(categoriaNum) in categorias:
+            categoriasOrdenadas[str(categoriaNum)] = categorias[str(categoriaNum)]
     
-    return categorias_ordenadas
+    return categoriasOrdenadas
 
-archivo_csv = "Datos_sujeto1 - Datos_sujeto1.csv"
-datos = leer_csv(archivo_csv)
-
-shuffle(datos)
-
-porcentaje_entrenamiento = int(input("Porcentaje de datos para entrenamiento (0-100): "))
-porcentaje_busqueda = 100 - porcentaje_entrenamiento
-
-datos_entrenamiento, datos_busqueda = dividir_datos(datos, porcentaje_entrenamiento)
+datosBusqueda=leerDatosBusqueda();
+datosEntrenamiento=leerDatosEntrenamiento();
 
 print("*-----------------------------------------Datos para entrenamiento-----------------------------------------*")
-for fila in datos_entrenamiento:
+for fila in datosEntrenamiento:
     print(fila)
 
 print("*-----------------------------------------Datos para búsqueda-----------------------------------------*")
-for fila in datos_busqueda:
+for fila in datosBusqueda:
     print(fila)
 
-
-categorias_entrenamiento = contar_cantidad_por_categoria(datos_entrenamiento)
-categorias_busqueda = contar_cantidad_por_categoria(datos_busqueda)
+categoriasEntrenamiento = cantidadCategoria(datosEntrenamiento)
+categoriasBusqueda = cantidadCategoria(datosBusqueda)
 
 print("Cantidad por categoría en datos para entrenamiento:")
-print("Datos para entrenamiento: ", len(datos_entrenamiento))
-for categoria, cantidad in categorias_entrenamiento.items():
-    print("Categoría:", categoria, "Cantidad:", cantidad)
+print("Datos para entrenamiento: ", len(datosEntrenamiento))
+for categoria, cantidad in categoriasEntrenamiento.items():
+    print("Categoria:", categoria, "Cantidad:", cantidad)
 
 print("Cantidad por categoría en datos para búsqueda:")
-print("Datos para búsqueda: ", len(datos_busqueda))
-for categoria, cantidad in categorias_busqueda.items():
-    print("Categoría:", categoria, "Cantidad:", cantidad)
+print("Datos para búsqueda: ", len(datosBusqueda))
+for categoria, cantidad in categoriasBusqueda.items():
+    print("Categoria:", categoria, "Cantidad:", cantidad)
