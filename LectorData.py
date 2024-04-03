@@ -56,11 +56,10 @@ print("Datos para entrenamiento: ", len(datosEntrenamiento))
 for categoria, cantidad in categoriasEntrenamiento.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
 
-<<<<<<< HEAD
 print("Cantidad por categoría en datos para Prueba:")
-=======
+
 print("Cantidad por categoría en datos para busqueda:")
->>>>>>> 424b2287c2f8e6b918b5224c11b246f4dfd5359b
+
 print("Datos para búsqueda: ", len(datosBusqueda))
 for categoria, cantidad in categoriasBusqueda.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
