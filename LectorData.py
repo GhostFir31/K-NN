@@ -1,7 +1,7 @@
 import csv
 from random import shuffle
 
-def leer_csv(archivo_csv):
+def leerCsv(archivo_csv):
     datos = []
     with open(archivo_csv, 'r', newline='') as archivo:
         lector = csv.reader(archivo)
@@ -11,13 +11,13 @@ def leer_csv(archivo_csv):
 
 def leerDatosBusqueda():
     archivo_csv = "datosBusqueda.csv"
-    datos = leer_csv(archivo_csv)
+    datos = leerCsv(archivo_csv)
     shuffle(datos)
     return datos
 
 def leerDatosEntrenamiento():
     archivo_csv = "datosEntrenamiento.csv"
-    datos = leer_csv(archivo_csv)
+    datos = leerCsv(archivo_csv)
     shuffle(datos)
     return datos 
 
@@ -56,7 +56,7 @@ print("Datos para entrenamiento: ", len(datosEntrenamiento))
 for categoria, cantidad in categoriasEntrenamiento.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
 
-print("Cantidad por categoría en datos para búsqueda:")
+print("Cantidad por categoría en datos para busqueda:")
 print("Datos para búsqueda: ", len(datosBusqueda))
 for categoria, cantidad in categoriasBusqueda.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
