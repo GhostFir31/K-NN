@@ -10,13 +10,25 @@ def leerCsv(archivo_csv):
             datos.append(fila)
     return datos
 
-def leerDatosBusqueda():
+def leerDatosBusqueda(nombre):
+    archivo_csv = nombre+".csv"
+    datos = leerCsv(archivo_csv)
+    shuffle(datos)
+    return datos
+
+def leerDatosEntrenamiento(nombre):
+    archivo_csv = nombre+".csv"
+    datos = leerCsv(archivo_csv)
+    shuffle(datos)
+    return datos 
+
+def leerDatosBusquedaP():
     archivo_csv = "datosBusqueda.csv"
     datos = leerCsv(archivo_csv)
     shuffle(datos)
     return datos
 
-def leerDatosEntrenamiento():
+def leerDatosEntrenamientoP():
     archivo_csv = "datosEntrenamiento.csv"
     datos = leerCsv(archivo_csv)
     shuffle(datos)
@@ -37,6 +49,8 @@ def cantidadCategoria(datos):
             categoriasOrdenadas[str(categoriaNum)] = categorias[str(categoriaNum)]
     
     return categoriasOrdenadas
+
+
 """""
 datosBusqueda=leerDatosBusqueda();
 datosEntrenamiento=leerDatosEntrenamiento();

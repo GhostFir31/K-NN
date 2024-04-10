@@ -16,35 +16,57 @@ def calcularDistancias(MetodoDistancia,x,y):
     
     else:
         print("Metodo no valido")
+
+def ordernarDistancias(listaDatosEntrenamiento, metodoDistancias, datoBusqueda):
+    for linea in listaDatosEntrenamiento:
+        distanciasPuntos = [float(val) for val in linea[:-1]] 
+        distancia = calcularDistancias(metodoDistancias, datoBusqueda, distanciasPuntos)
+        linea.append(distancia)  
         
+    return listaDatosEntrenamiento
 
-def knn(listaDatosBusqueda,listaDatosEntrenamiento,metodoDistancias):
-    distancia=calcularDistancias(metodoDistancias,x,y)
-    print("La distancia entre los puntos es: "+ str(distancia))
-    pass
+def knn(listaDatosBusqueda, listaDatosEntrenamiento, metodoDistancias, k, datoABuscar):
+    datoBusqueda = [float(val) for val in listaDatosBusqueda[datoABuscar]]  
+    print(datoBusqueda)
+    
+    listaconDistancias = ordernarDistancias(listaDatosEntrenamiento, metodoDistancias, datoBusqueda)
+   
+    listaconDistancias.sort(key=lambda x: x[-1])  
+        
+    k = int(k)
+    listavaloresCercanos = listaconDistancias[:k]  
+    
+    print("K valores Cercanos :"+str(k))
+    for fila in listavaloresCercanos:
+        print(fila)
+        
+    
+#nombreDatosBusqueda=input("Introduce el nombre del archivo de busqueda: \n")
+#nombreDatosEntrenamiento=input("Introduce el nombre del archivo de entrenamiento: \n")
 
-x = [10,28,35,42]
-y = [51,64,75,86]
+#datosBusqueda=LectorData.leerDatosBusqueda(nombreDatosBusqueda);
+#datosEntrenamiento=LectorData.leerDatosEntrenamientoP(nombreDatosEntrenamiento);
 
-datosBusqueda=LectorData.leerDatosBusqueda();
-datosEntrenamiento=LectorData.leerDatosEntrenamiento();
+datosBusqueda=LectorData.leerDatosBusquedaP();
+datosEntrenamiento=LectorData.leerDatosEntrenamientoP();
 
-categoriasEntrenamiento =LectorData. cantidadCategoria(datosEntrenamiento)
+categoriasEntrenamiento = LectorData.cantidadCategoria(datosEntrenamiento)
 categoriasBusqueda = LectorData.cantidadCategoria(datosBusqueda)
 
-print("Cantidad por categoría en datos para Entrenamiento:")
+print("Cantidad por categoria en datos para Entrenamiento:")
 print("Datos para entrenamiento: ", len(datosEntrenamiento))
 for categoria, cantidad in categoriasEntrenamiento.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
 
-print("Cantidad por categoría en datos para Prueba:")
+print("Cantidad por categoria en datos para Prueba:")
 print("Datos para Prueba: ", len(datosBusqueda))
 for categoria, cantidad in categoriasBusqueda.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
     
 print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan\n3)Minkowski")    
 nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
-print("x= "+str(x)+" y= "+str(y))    
 
-knn(datosBusqueda,datosEntrenamiento,nombreMetodo)
+k=input("Introduce el valor de vecinos cercanos k: \n")
+
+knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,0)
 
