@@ -1,4 +1,4 @@
-from numpy import integer
+
 import LectorData
 import MetodosDistancia
 
