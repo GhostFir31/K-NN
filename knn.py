@@ -18,37 +18,64 @@ def calcularDistancias(MetodoDistancia,x,y):
         print("Metodo no valido")
 
 def ordernarDistancias(listaDatosEntrenamiento, metodoDistancias, datoBusqueda):
-    for linea in listaDatosEntrenamiento:
+    listaDatosEntrenamientoConDistancias = [linea[:] for linea in listaDatosEntrenamiento]
+    
+    for linea in listaDatosEntrenamientoConDistancias:
         distanciasPuntos = [float(val) for val in linea[:-1]] 
         distancia = calcularDistancias(metodoDistancias, datoBusqueda, distanciasPuntos)
         linea.append(distancia)  
         
-    return listaDatosEntrenamiento
+    return listaDatosEntrenamientoConDistancias
 
 def knn(listaDatosBusqueda, listaDatosEntrenamiento, metodoDistancias, k, datoABuscar):
     datoBusqueda = [float(val) for val in listaDatosBusqueda[datoABuscar]]  
+    print("Punto de Busqueda: ")
     print(datoBusqueda)
     
     listaconDistancias = ordernarDistancias(listaDatosEntrenamiento, metodoDistancias, datoBusqueda)
-   
-    listaconDistancias.sort(key=lambda x: x[-1])  
-        
+    listaconDistancias.sort(key=lambda x: x[-1])      
     k = int(k)
     listavaloresCercanos = listaconDistancias[:k]  
     
-    print("K valores Cercanos :"+str(k))
+    print("K valores Cercanos : k="+str(k))
     for fila in listavaloresCercanos:
         print(fila)
+    prediccion(datoBusqueda,listavaloresCercanos)
         
+def prediccion(datoBusqueda,listavaloresCercanos):
     
-#nombreDatosBusqueda=input("Introduce el nombre del archivo de busqueda: \n")
-#nombreDatosEntrenamiento=input("Introduce el nombre del archivo de entrenamiento: \n")
+    clases = [fila[-2] for fila in listavaloresCercanos]
+    
+    cantidadClases = {}
+    
+    for clase in clases:
+        if clase in cantidadClases:
+            cantidadClases[clase] += 1
+        else:
+            cantidadClases[clase] = 1
+    
+    claseRepetidaMas = max(cantidadClases, key=cantidadClases.get)
+            
+    print("Prediccion: Clase "+str(claseRepetidaMas))        
+    print("Realidad: Clase "+ str(int(datoBusqueda[-1])))
 
-#datosBusqueda=LectorData.leerDatosBusqueda(nombreDatosBusqueda);
-#datosEntrenamiento=LectorData.leerDatosEntrenamientoP(nombreDatosEntrenamiento);
+def ejecucionKNN(datosBusqueda,datosEntrenamiento,indice):
+    print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan\n3)Minkowski")    
+    nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
+    k=input("Introduce el valor de vecinos cercanos k: \n")
 
-datosBusqueda=LectorData.leerDatosBusquedaP();
-datosEntrenamiento=LectorData.leerDatosEntrenamientoP();
+    knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,indice)
+
+indice=0
+    
+nombreDatosBusqueda=input("Introduce el nombre del archivo de busqueda: \n")
+nombreDatosEntrenamiento=input("Introduce el nombre del archivo de entrenamiento: \n")
+
+datosBusqueda=LectorData.leerDatosBusqueda(nombreDatosBusqueda);
+datosEntrenamiento=LectorData.leerDatosEntrenamiento(nombreDatosEntrenamiento);
+
+#datosBusqueda=LectorData.leerDatosBusquedaP();
+#datosEntrenamiento=LectorData.leerDatosEntrenamientoP();
 
 categoriasEntrenamiento = LectorData.cantidadCategoria(datosEntrenamiento)
 categoriasBusqueda = LectorData.cantidadCategoria(datosBusqueda)
@@ -63,10 +90,20 @@ print("Datos para Prueba: ", len(datosBusqueda))
 for categoria, cantidad in categoriasBusqueda.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
     
-print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan\n3)Minkowski")    
-nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
+ejecucionKNN(datosBusqueda,datosEntrenamiento,0)
 
-k=input("Introduce el valor de vecinos cercanos k: \n")
+opcion="a"
 
-knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,0)
+while(opcion!="s"):
+    print("Escoga una opcion: \nc)Procesar El Siguiente Dato\nt)Procesar todos los datos de prueba\ns)Finalizar procesamiento")     
+    opcion=input("")
+    if opcion == "c":
+        indice=indice+1
+        ejecucionKNN(datosBusqueda,datosEntrenamiento,indice)
+    elif opcion == "t":
+        ejecucionKNN(datosBusqueda, datosEntrenamiento,0)
+    elif opcion == "s":
+        pass
+    else:
+        print("Opcion Introducida No Valida")
 
