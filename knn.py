@@ -8,12 +8,6 @@ def calcularDistancias(MetodoDistancia,x,y):
         return MetodosDistancia.distanciaEuclidiana(x,y)
     elif(MetodoDistancia=="2"):
         return MetodosDistancia.distanciaManhattan(x, y)
-    elif(MetodoDistancia=="3"):
-        
-        p=input("escoga el valor de p: (p=1 es igual a Manhantan y p=2 es igual a Euclidiana)\n")
-        
-        return MetodosDistancia.distanciaMinkowski(x,y,int(p))
-    
     else:
         print("Metodo no valido")
 
@@ -56,52 +50,53 @@ def prediccion(datoBusqueda,listavaloresCercanos):
     
     claseRepetidaMas = max(cantidadClases, key=cantidadClases.get)
             
-    print("Prediccion: Clase "+str(claseRepetidaMas))        
+    print("Prediccion: Clase "+str(claseRepetidaMas))
     print("Realidad: Clase "+ str(int(datoBusqueda[-1])))
 
-def ejecucionKNN(datosBusqueda,datosEntrenamiento,indice):
-    print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan\n3)Minkowski")    
+def ejecucionKNN(datosBusqueda,datosEntrenamiento):
+    print("*-----------------------------------------Datos para búsqueda-----------------------------------------*")
+    for fila in datosBusqueda:
+        print("No." + str(numDato) + " " + ", ".join(map(str, fila)))
+        numDato = numDato + 1
+        
+    datoABuscar=int(input("Escoga el numero de Dato que quiere Clasificar: \n"))
+    print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan")
     nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
     k=input("Introduce el valor de vecinos cercanos k: \n")
+    knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
 
-    knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,indice)
+numDato=0
 
-indice=0
-    
-nombreDatosBusqueda=input("Introduce el nombre del archivo de busqueda: \n")
-nombreDatosEntrenamiento=input("Introduce el nombre del archivo de entrenamiento: \n")
+#nombreDatosBusqueda=input("Introduce el nombre del archivo de busqueda: \n")
+#nombreDatosEntrenamiento=input("Introduce el nombre del archivo de entrenamiento: \n")
 
-datosBusqueda=LectorData.leerDatosBusqueda(nombreDatosBusqueda);
-datosEntrenamiento=LectorData.leerDatosEntrenamiento(nombreDatosEntrenamiento);
+#datosBusqueda=LectorData.leerDatosBusqueda(nombreDatosBusqueda);
+#datosEntrenamiento=LectorData.leerDatosEntrenamiento(nombreDatosEntrenamiento);
 
-#datosBusqueda=LectorData.leerDatosBusquedaP();
-#datosEntrenamiento=LectorData.leerDatosEntrenamientoP();
+datosBusqueda=LectorData.leerDatosBusquedaP();
+datosEntrenamiento=LectorData.leerDatosEntrenamientoP();
 
-categoriasEntrenamiento = LectorData.cantidadCategoria(datosEntrenamiento)
-categoriasBusqueda = LectorData.cantidadCategoria(datosBusqueda)
+print("*-----------------------------------------Datos para búsqueda-----------------------------------------*")
+for fila in datosBusqueda:
+    print("No." + str(numDato) + " " + ", ".join(map(str, fila)))
+    numDato = numDato + 1
 
-print("Cantidad por categoria en datos para Entrenamiento:")
-print("Datos para entrenamiento: ", len(datosEntrenamiento))
-for categoria, cantidad in categoriasEntrenamiento.items():
-    print("Categoria:", categoria, "Cantidad:", cantidad)
 
-print("Cantidad por categoria en datos para Prueba:")
-print("Datos para Prueba: ", len(datosBusqueda))
-for categoria, cantidad in categoriasBusqueda.items():
-    print("Categoria:", categoria, "Cantidad:", cantidad)
-    
-ejecucionKNN(datosBusqueda,datosEntrenamiento,0)
+datoABuscar=int(input("Escoga el numero de Dato que quiere Clasificar: \n"))   
+print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan")
+nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
+k=input("Introduce el valor de vecinos cercanos k: \n")
+knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
 
 opcion="a"
-
 while(opcion!="s"):
     print("Escoga una opcion: \nc)Procesar El Siguiente Dato\nt)Procesar todos los datos de prueba\ns)Finalizar procesamiento")     
     opcion=input("")
     if opcion == "c":
-        indice=indice+1
-        ejecucionKNN(datosBusqueda,datosEntrenamiento,indice)
+        datoABuscar=datoABuscar+1
+        knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
     elif opcion == "t":
-        ejecucionKNN(datosBusqueda, datosEntrenamiento,0)
+        ejecucionKNN(datosBusqueda, datosEntrenamiento)
     elif opcion == "s":
         pass
     else:

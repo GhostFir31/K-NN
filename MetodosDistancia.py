@@ -7,7 +7,3 @@ def distanciaEuclidiana(x, y):
 def distanciaManhattan(x, y):
     resta = [abs(a - b) for a, b in zip(x, y)]
     return sum(resta)
-
-def distanciaMinkowski(x, y, p):
-    resta = [abs(a - b) ** p for a, b in zip(x, y)]
-    return sum(resta) ** (1/p)
