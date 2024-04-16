@@ -49,9 +49,17 @@ def prediccion(datoBusqueda,listavaloresCercanos):
             cantidadClases[clase] = 1
     
     claseRepetidaMas = max(cantidadClases, key=cantidadClases.get)
-            
+
     print("Prediccion: Clase "+str(claseRepetidaMas))
     print("Realidad: Clase "+ str(int(datoBusqueda[-1])))
+
+def registrarDatosPrueba(datoBusqueda,claseRepetidaMas):
+
+    
+    
+    
+ 
+    pass
 
 def ejecucionKNN(datosBusqueda,datosEntrenamiento):
     print("*-----------------------------------------Datos para búsqueda-----------------------------------------*")
@@ -80,7 +88,6 @@ print("*-----------------------------------------Datos para búsqueda-----------
 for fila in datosBusqueda:
     print("No." + str(numDato) + " " + ", ".join(map(str, fila)))
     numDato = numDato + 1
-
 
 datoABuscar=int(input("Escoga el numero de Dato que quiere Clasificar: \n"))   
 print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan")
