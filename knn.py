@@ -54,7 +54,6 @@ def prediccion(datoBusqueda,listavaloresCercanos):
     ver=str(int(datoBusqueda[-1]))
       
     registrarDatosPrueba(ver,claseRepetidaMas)
-    registrarMatrizConfusion(tablaVerdad)
     
     print("Prediccion: Clase "+str(claseRepetidaMas))
     print("Realidad: Clase "+ str(int(datoBusqueda[-1])))
@@ -84,17 +83,24 @@ def registrarMatrizConfusion(tablaVerdad):
         contadorfor=contadorfor+1
 
 def ejecucionKNN(datosBusqueda,datosEntrenamiento):
+    
     numDato=0
     print("*-----------------------------------------Datos para búsqueda-----------------------------------------*")
     for fila in datosBusqueda:
         print("No." + str(numDato) + " " + ", ".join(map(str, fila)))
         numDato = numDato + 1
-        
+       
     datoABuscar=int(input("Escoga el numero de Dato que quiere Clasificar: \n"))
     print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan")
     nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
     k=input("Introduce el valor de vecinos cercanos k: \n")
     knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
+
+def ejecucionTodosKNN(datosBusqueda,datosEntrenamiento):
+    datoABuscar=0
+    k=input("Introduce el valor de vecinos cercanos k: \n")
+    for datoABuscar in range(len(datosBusqueda)-1):
+        knn(datosBusqueda,datosEntrenamiento,"1",k,datoABuscar)
 
 def crearArchivoTablaVerdad(tablaVerdad, filename='procesamientoDatosPrueba.csv'):
     with open(filename, 'w', newline='') as file:
@@ -104,7 +110,7 @@ def crearArchivoTablaVerdad(tablaVerdad, filename='procesamientoDatosPrueba.csv'
             fila_list = [fila.id, fila.prediccion, fila.realidad,fila.C0,fila.C1,fila.C2,fila.C3,fila.C4]  
             writer.writerow(fila_list)
 
-def crearMatrizConfusion(matrizConfusion, filename='matrizConfusion.csv'):
+def crearArchivoMatrizConfusion(matrizConfusion, filename='matrizConfusion.csv'):
     with open(filename, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['C0', 'C1', 'C2', 'C3', 'C4'])
@@ -146,6 +152,7 @@ def calcularMetricas(tablaVerdad):
 id=1
 numDato=0
 tablaVerdad=[]
+datoABuscar=0
 matrizConfusion = [[0] * 5 for _ in range(5)]
 
 #nombreDatosBusqueda=input("Introduce el nombre del archivo de busqueda: \n")
@@ -154,32 +161,40 @@ matrizConfusion = [[0] * 5 for _ in range(5)]
 #datosBusqueda=LectorData.leerDatosBusqueda(nombreDatosBusqueda);
 #datosEntrenamiento=LectorData.leerDatosEntrenamiento(nombreDatosEntrenamiento);
 
-datosBusqueda=LectorData.leerDatosBusquedaP();
-datosEntrenamiento=LectorData.leerDatosEntrenamientoP();
+datosBusqueda=LectorData.leerDatosBusquedaP()
+datosEntrenamiento=LectorData.leerDatosEntrenamientoP()
 
+numDato=0
 print("*-----------------------------------------Datos para búsqueda-----------------------------------------*")
 for fila in datosBusqueda:
     print("No." + str(numDato) + " " + ", ".join(map(str, fila)))
     numDato = numDato + 1
-
-datoABuscar=int(input("Escoga el numero de Dato que quiere Clasificar: \n"))   
+    
+datoABuscar=int(input("Escoga el numero de Dato que quiere Clasificar: \n"))
 print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan")
 nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
 k=input("Introduce el valor de vecinos cercanos k: \n")
 knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
 
 opcion="a"
+
 while(opcion!="s"):
     print("Escoga una opcion: \nc)Procesar El Siguiente Dato\nt)Procesar todos los datos de prueba\ns)Finalizar procesamiento")     
     opcion=input("")
     if opcion == "c":
-        datoABuscar=datoABuscar+1
-        knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
+        if(datoABuscar>397):
+            print("Dato Fuera del Limite")
+        else:
+            datoABuscar=datoABuscar+1
+            knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
     elif opcion == "t":
-        ejecucionKNN(datosBusqueda, datosEntrenamiento)
+        tablaVerdad=[]
+        ejecucionTodosKNN(datosBusqueda, datosEntrenamiento)
+        datoABuscar=len(datosBusqueda)
     elif opcion == "s":
+        registrarMatrizConfusion(tablaVerdad)
         crearArchivoTablaVerdad(tablaVerdad)
-        crearMatrizConfusion(matrizConfusion)
+        crearArchivoMatrizConfusion(matrizConfusion)
         calcularMetricas(tablaVerdad)
     else:
         print("Opcion Introducida No Valida")
