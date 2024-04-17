@@ -1,6 +1,8 @@
 
+import TablaPredicciones
 import LectorData
 import MetodosDistancia
+import csv
 
 def calcularDistancias(MetodoDistancia,x,y):
     
@@ -49,19 +51,41 @@ def prediccion(datoBusqueda,listavaloresCercanos):
             cantidadClases[clase] = 1
     
     claseRepetidaMas = max(cantidadClases, key=cantidadClases.get)
-
+    
+    ver=str(int(datoBusqueda[-1]))
+      
+    registrarDatosPrueba(ver,claseRepetidaMas)
+    registrarMatrizConfusion(tablaVerdad)
+    
     print("Prediccion: Clase "+str(claseRepetidaMas))
     print("Realidad: Clase "+ str(int(datoBusqueda[-1])))
 
 def registrarDatosPrueba(datoBusqueda,claseRepetidaMas):
+    global id
+    fila = TablaPredicciones.FilaTabla(id,claseRepetidaMas,datoBusqueda)
+    fila.MetodoTablaDeVerdad() 
+    tablaVerdad.append(fila)
+    id=id+1
+    print("Tabla Verdad:")
+    for fila in tablaVerdad:
+        print(fila)
 
+def registrarMatrizConfusion(tablaVerdad):
+
+    for fila in tablaVerdad:
+        claseReal = int(fila.realidad)
+        clasePredicha = int(fila.prediccion)
+        matrizConfusion[claseReal][clasePredicha] += 1
     
-    
-    
- 
-    pass
+    print("Matriz de Confusion:")
+    print("    C0 C1 C2 C3 C4")
+    contadorfor=0
+    for fila in matrizConfusion:
+        print("C" + str(contadorfor) + ":" + str(fila))
+        contadorfor=contadorfor+1
 
 def ejecucionKNN(datosBusqueda,datosEntrenamiento):
+    numDato=0
     print("*-----------------------------------------Datos para búsqueda-----------------------------------------*")
     for fila in datosBusqueda:
         print("No." + str(numDato) + " " + ", ".join(map(str, fila)))
@@ -73,7 +97,26 @@ def ejecucionKNN(datosBusqueda,datosEntrenamiento):
     k=input("Introduce el valor de vecinos cercanos k: \n")
     knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
 
+def crearArchivoTablaVerdad(tablaVerdad, filename='procesamientoDatosPrueba.csv'):
+    with open(filename, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['id', 'prediccion', 'realidad', 'C0', 'C1', 'C2', 'C3', 'C4'])
+        for fila in tablaVerdad:
+            fila_list = [fila.id, fila.prediccion, fila.realidad,fila.C0,fila.C1,fila.C2,fila.C3,fila.C4]  
+            writer.writerow(fila_list)
+
+def crearMatrizConfusion(matrizConfusion, filename='matrizConfusion.csv'):
+    with open(filename, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['C0', 'C1', 'C2', 'C3', 'C4'])
+        for fila in matrizConfusion:
+            writer.writerow(fila)
+                        
+                        
+id=1
 numDato=0
+tablaVerdad=[]
+matrizConfusion = [[0] * 5 for _ in range(5)]
 
 #nombreDatosBusqueda=input("Introduce el nombre del archivo de busqueda: \n")
 #nombreDatosEntrenamiento=input("Introduce el nombre del archivo de entrenamiento: \n")
@@ -105,7 +148,8 @@ while(opcion!="s"):
     elif opcion == "t":
         ejecucionKNN(datosBusqueda, datosEntrenamiento)
     elif opcion == "s":
-        pass
+        crearArchivoTablaVerdad(tablaVerdad)
+        crearMatrizConfusion(matrizConfusion)
     else:
         print("Opcion Introducida No Valida")
 
