@@ -111,7 +111,38 @@ def crearMatrizConfusion(matrizConfusion, filename='matrizConfusion.csv'):
         for fila in matrizConfusion:
             writer.writerow(fila)
                         
-                        
+def calcularMetricas(tablaVerdad):
+    total = len(tablaVerdad)
+    tp = 0
+    tn = 0
+    fp = 0
+    fn = 0
+    for fila in tablaVerdad:
+        claseReal = int(fila.realidad)
+        clasePredicha = int(fila.prediccion)
+        
+        if claseReal == clasePredicha:
+            if claseReal == 1:
+                tp += 1
+            else:
+                tn += 1
+        else:
+            if claseReal == 1:
+                fn += 1
+            else:
+                fp += 1
+                
+    accuracy = (tp + tn) / total
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+    fscore = 2 * (precision * recall) / (precision + recall)
+
+    print("Precision:", precision)
+    print("Recall:", recall)
+    print("Accuracy:", accuracy)
+    print("F-score:", fscore)
+
+                       
 id=1
 numDato=0
 tablaVerdad=[]
@@ -149,6 +180,7 @@ while(opcion!="s"):
     elif opcion == "s":
         crearArchivoTablaVerdad(tablaVerdad)
         crearMatrizConfusion(matrizConfusion)
+        calcularMetricas(tablaVerdad)
     else:
         print("Opcion Introducida No Valida")
 
