@@ -1,7 +1,6 @@
 import csv
 from random import shuffle
 
-
 def leerCsv(archivo_csv):
     datos = []
     with open(archivo_csv, 'r', newline='') as archivo:
@@ -51,9 +50,9 @@ def cantidadCategoria(datos):
     return categoriasOrdenadas
 
 
-"""""
-datosBusqueda=leerDatosBusqueda();
-datosEntrenamiento=leerDatosEntrenamiento();
+""""
+datosBusqueda=leerDatosBusquedaP();
+datosEntrenamiento=leerDatosEntrenamientoP();
 
 print("*-----------------------------------------Datos para entrenamiento-----------------------------------------*")
 for fila in datosEntrenamiento:
@@ -75,4 +74,4 @@ print("Cantidad por categoría en datos para Prueba:")
 print("Datos para Prueba: ", len(datosBusqueda))
 for categoria, cantidad in categoriasBusqueda.items():
     print("Categoria:", categoria, "Cantidad:", cantidad)
-    """""
+   """""

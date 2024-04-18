@@ -23,20 +23,20 @@ def ordernarDistancias(listaDatosEntrenamiento, metodoDistancias, datoBusqueda):
     return listaDatosEntrenamientoConDistancias
 
 def knn(listaDatosBusqueda, listaDatosEntrenamiento, metodoDistancias, k, datoABuscar):
-    datoBusqueda = [float(val) for val in listaDatosBusqueda[datoABuscar]]  
+    datoBusqueda = [float(val) for val in listaDatosBusqueda[datoABuscar]]
     print("Punto de Busqueda: ")
     print(datoBusqueda)
     
     listaconDistancias = ordernarDistancias(listaDatosEntrenamiento, metodoDistancias, datoBusqueda)
-    listaconDistancias.sort(key=lambda x: x[-1])      
+    listaconDistancias.sort(key=lambda x: x[-1])
     k = int(k)
-    listavaloresCercanos = listaconDistancias[:k]  
+    listavaloresCercanos = listaconDistancias[:k]
     
     print("K valores Cercanos : k="+str(k))
     for fila in listavaloresCercanos:
         print(fila)
         
-    prediccion(datoBusqueda,listavaloresCercanos)    
+    prediccion(datoBusqueda,listavaloresCercanos)
             
 def prediccion(datoBusqueda,listavaloresCercanos):
     
@@ -50,6 +50,9 @@ def prediccion(datoBusqueda,listavaloresCercanos):
         else:
             cantidadClases[clase] = 1
     
+    for clase in clases:
+        print("Clase: " + str(clase) + ", Cantidad: " + str(cantidadClases[clase]))
+        
     claseRepetidaMas = max(cantidadClases, key=cantidadClases.get)
     
     ver=str(int(datoBusqueda[-1]))
@@ -62,7 +65,7 @@ def prediccion(datoBusqueda,listavaloresCercanos):
 def registrarDatosPrueba(datoBusqueda,claseRepetidaMas):
     global id
     fila = TablaPredicciones.FilaTabla(id,claseRepetidaMas,datoBusqueda)
-    fila.MetodoTablaDeVerdad() 
+    fila.MetodoTablaDeVerdad()
     tablaVerdad.append(fila)
     id=id+1
 
@@ -72,12 +75,12 @@ def imprimirTablaVerdad():
         print(fila)
 
 def registrarMatrizConfusion(tablaVerdad):
-
+    
     for fila in tablaVerdad:
         claseReal = int(fila.realidad)
         clasePredicha = int(fila.prediccion)
-        matrizConfusion[claseReal][clasePredicha] += 1
-    
+        matrizConfusion[clasePredicha][claseReal] += 1
+        
     print("Matriz de Confusion:")
     print("    C0 C1 C2 C3 C4")
     contadorfor=0
@@ -101,9 +104,11 @@ def ejecucionKNN(datosBusqueda,datosEntrenamiento):
 
 def ejecucionTodosKNN(datosBusqueda,datosEntrenamiento):
     datoABuscar=0
+    print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan")
+    nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
     k=input("Introduce el valor de vecinos cercanos k: \n")
     for datoABuscar in range(len(datosBusqueda)-1):
-        knn(datosBusqueda,datosEntrenamiento,"1",k,datoABuscar)
+        knn(datosBusqueda,datosEntrenamiento,nombreMetodo,int(k),datoABuscar)
         
 def crearArchivoTablaVerdad(tablaVerdad, filename='procesamientoDatosPrueba.csv'):
     with open(filename, 'w', newline='') as file:
@@ -120,28 +125,24 @@ def crearArchivoMatrizConfusion(matrizConfusion, filename='matrizConfusion.csv')
         for fila in matrizConfusion:
             writer.writerow(fila)
                         
-def calcularMetricas(tablaVerdad):
-    total = len(tablaVerdad)
+def calcularMetricas(matrizConfusion):
+    total = len(matrizConfusion)
     tp = 0
     tn = 0
     fp = 0
     fn = 0
-    for fila in tablaVerdad:
-        claseReal = int(fila.realidad)
-        clasePredicha = int(fila.prediccion)
-        
-        if claseReal == clasePredicha:
-            if claseReal == 1:
-                tp += 1
-            else:
-                tn += 1
-        else:
-            if claseReal == 1:
-                fn += 1
-            else:
-                fp += 1
-                
-    accuracy = (tp + tn) / total
+
+    for i in range(total):
+        tp += matrizConfusion[i][i]
+        for j in range(total):
+            if i != j:
+                fp += matrizConfusion[i][j]
+                fn += matrizConfusion[j][i]
+                for k in range(total):
+                    if k != i and k != j:
+                        tn += matrizConfusion[k][k]
+            
+    accuracy = (tp + tn) / (tp + tn + fp + fn)
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
     fscore = 2 * (precision * recall) / (precision + recall)
@@ -155,6 +156,7 @@ id=1
 numDato=0
 tablaVerdad=[]
 datoABuscar=0
+nombreMetodo=None
 matrizConfusion = [[0] * 5 for _ in range(5)]
 
 #nombreDatosBusqueda=input("Introduce el nombre del archivo de busqueda: \n")
@@ -181,20 +183,22 @@ if opcionMenu == "a":
 elif opcionMenu == "b":
     ejecucionTodosKNN(datosBusqueda, datosEntrenamiento)
     imprimirTablaVerdad()
-
-
+    
 opcion="a"
 
 while(opcion!="s"):
     print("Escoga una opcion: \nc)Procesar El Siguiente Dato\nt)Procesar todos los datos de prueba\ns)Finalizar procesamiento")     
     opcion=input("")
     if opcion == "c":
-        if(datoABuscar>397):
-            print("Dato Fuera del Limite")
-        else:
-            datoABuscar=datoABuscar+1
-            knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
-            imprimirTablaVerdad()
+        if nombreMetodo is None:
+            print("Ya termino de procesar los datos de prueba")
+        else: 
+            if(datoABuscar>397):
+                print("Dato Fuera del Limite")
+            else:
+                datoABuscar=datoABuscar+1
+                knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
+                imprimirTablaVerdad()
     elif opcion == "t":
         id=1
         tablaVerdad=[]
@@ -205,7 +209,7 @@ while(opcion!="s"):
         registrarMatrizConfusion(tablaVerdad)
         crearArchivoTablaVerdad(tablaVerdad)
         crearArchivoMatrizConfusion(matrizConfusion)
-        calcularMetricas(tablaVerdad)
+        calcularMetricas(matrizConfusion)
     else:
         print("Opcion Introducida No Valida")
 
