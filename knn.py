@@ -35,8 +35,9 @@ def knn(listaDatosBusqueda, listaDatosEntrenamiento, metodoDistancias, k, datoAB
     print("K valores Cercanos : k="+str(k))
     for fila in listavaloresCercanos:
         print(fila)
-    prediccion(datoBusqueda,listavaloresCercanos)
         
+    prediccion(datoBusqueda,listavaloresCercanos)    
+            
 def prediccion(datoBusqueda,listavaloresCercanos):
     
     clases = [fila[-2] for fila in listavaloresCercanos]
@@ -64,6 +65,8 @@ def registrarDatosPrueba(datoBusqueda,claseRepetidaMas):
     fila.MetodoTablaDeVerdad() 
     tablaVerdad.append(fila)
     id=id+1
+
+def imprimirTablaVerdad():
     print("Tabla Verdad:")
     for fila in tablaVerdad:
         print(fila)
@@ -101,7 +104,7 @@ def ejecucionTodosKNN(datosBusqueda,datosEntrenamiento):
     k=input("Introduce el valor de vecinos cercanos k: \n")
     for datoABuscar in range(len(datosBusqueda)-1):
         knn(datosBusqueda,datosEntrenamiento,"1",k,datoABuscar)
-
+        
 def crearArchivoTablaVerdad(tablaVerdad, filename='procesamientoDatosPrueba.csv'):
     with open(filename, 'w', newline='') as file:
         writer = csv.writer(file)
@@ -147,8 +150,7 @@ def calcularMetricas(tablaVerdad):
     print("Recall:", recall)
     print("Accuracy:", accuracy)
     print("F-score:", fscore)
-
-                       
+                   
 id=1
 numDato=0
 tablaVerdad=[]
@@ -164,17 +166,22 @@ matrizConfusion = [[0] * 5 for _ in range(5)]
 datosBusqueda=LectorData.leerDatosBusquedaP()
 datosEntrenamiento=LectorData.leerDatosEntrenamientoP()
 
-numDato=0
-print("*-----------------------------------------Datos para búsqueda-----------------------------------------*")
-for fila in datosBusqueda:
-    print("No." + str(numDato) + " " + ", ".join(map(str, fila)))
-    numDato = numDato + 1
-    
-datoABuscar=int(input("Escoga el numero de Dato que quiere Clasificar: \n"))
-print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan")
-nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
-k=input("Introduce el valor de vecinos cercanos k: \n")
-knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
+print("a)Escoger un Dato para Clasificar\nb)Clasificar Todos los Datos de Prueba")
+opcionMenu=input("")
+if opcionMenu == "a":
+    print("*-----------------------------------------Datos para búsqueda-----------------------------------------*")
+    for fila in datosBusqueda:
+        print("No." + str(numDato) + " " + ", ".join(map(str, fila)))
+        numDato = numDato + 1  
+    datoABuscar=int(input("Escoga el numero de Dato que quiere Clasificar: \n"))
+    print("Escoja El Metodo de Calculo de Distancias: \n1)Euclidiana\n2)Manhattan")
+    nombreMetodo=input("Introduzca el numero del metodo a utilizar: \n")
+    k=input("Introduce el valor de vecinos cercanos k: \n")
+    knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
+elif opcionMenu == "b":
+    ejecucionTodosKNN(datosBusqueda, datosEntrenamiento)
+    imprimirTablaVerdad()
+
 
 opcion="a"
 
@@ -187,9 +194,12 @@ while(opcion!="s"):
         else:
             datoABuscar=datoABuscar+1
             knn(datosBusqueda,datosEntrenamiento,nombreMetodo,k,datoABuscar)
+            imprimirTablaVerdad()
     elif opcion == "t":
+        id=1
         tablaVerdad=[]
         ejecucionTodosKNN(datosBusqueda, datosEntrenamiento)
+        imprimirTablaVerdad()
         datoABuscar=len(datosBusqueda)
     elif opcion == "s":
         registrarMatrizConfusion(tablaVerdad)
