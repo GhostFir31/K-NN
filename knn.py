@@ -49,10 +49,7 @@ def prediccion(datoBusqueda,listavaloresCercanos):
             cantidadClases[clase] += 1
         else:
             cantidadClases[clase] = 1
-    
-    for clase in clases:
-        print("Clase: " + str(clase) + ", Cantidad: " + str(cantidadClases[clase]))
-        
+       
     claseRepetidaMas = max(cantidadClases, key=cantidadClases.get)
     
     ver=str(int(datoBusqueda[-1]))
